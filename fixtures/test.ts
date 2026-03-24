@@ -12,7 +12,6 @@ type MyFixtures = {
 };
 
 export const test = base.extend<MyFixtures>({
-  
   user: async ({}, use) => {
     await use({
       username: 'jakubkwi',
@@ -24,5 +23,4 @@ export const test = base.extend<MyFixtures>({
     const loginPage = new LoginPage(page);
     await use(loginPage);
   },
-
 });
