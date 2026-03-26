@@ -1,26 +1,17 @@
-import { test as base } from '@playwright/test';
+// ../fixtures/test.ts
+import { test as base, expect, Page } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
+import { loginPageFixture } from './loginPage.fixture';
+import { userFixture } from './user.fixture';
 
-type User = {
-  username: string;
-  password: string;
-};
-
-type MyFixtures = {
-  user: User;
+// Tworzymy nowy test, rozszerzając base o nasze fixture
+export const test = base.extend<{
   loginPage: LoginPage;
-};
-
-export const test = base.extend<MyFixtures>({
-  user: async ({}, use) => {
-    await use({
-      username: 'jakubkwi',
-      password: 'pass123!',
-    });
-  },
-
-  loginPage: async ({ page }, use) => {
-    const loginPage = new LoginPage(page);
-    await use(loginPage);
-  },
+  user: { username: string; password: string };
+}>({
+  loginPage: loginPageFixture.loginPage, // podłączamy loginPage
+  user: userFixture.user,                 // podłączamy user
 });
+
+// eksportujemy expect żeby działały normalne asercje
+export { expect };

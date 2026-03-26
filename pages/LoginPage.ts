@@ -6,8 +6,10 @@ export class LoginPage {
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
   readonly nextButton: Locator;
-  readonly errorLoginMessage: Locator;
-  readonly errorPasswordMessage: Locator;
+  readonly emptyUsernameMessage: Locator;
+  readonly tooShortUsernameMessage: Locator;
+  readonly emptyPasswordMessage: Locator;
+  readonly tooShortPasswordMessage: Locator;
 
   constructor(private page: Page) {
     this.page = page;
@@ -15,8 +17,10 @@ export class LoginPage {
     this.passwordInput = page.locator('#login_password');
     this.nextButton = page.getByRole('button', { name: 'dalej' });
     this.loginButton = page.getByRole('button', { name: 'zaloguj się' });
-    this.errorLoginMessage = page.getByText('identyfikator ma min. 8 znaków');
-    this.errorPasswordMessage = page.getByText('hasło ma min. 8 znaków');
+    this.emptyUsernameMessage = page.getByText('pole wymagane');
+    this.tooShortUsernameMessage = page.getByText('identyfikator ma min. 8 znaków');
+    this.emptyPasswordMessage = page.getByText('pole wymagane');
+    this.tooShortPasswordMessage = page.getByText('hasło ma min. 8 znaków');
   }
 
   async goTo(): Promise<void> {
@@ -49,13 +53,21 @@ export class LoginPage {
     await this.fillPassword(password);
     await this.clickLogin();
   }
-
-  async assertWrongUsername(): Promise<void> {
-    await expect(this.errorLoginMessage).toBeVisible();
+  
+  async assertEmptyUsername(): Promise<void> {
+    await expect(this.emptyUsernameMessage).toBeVisible();
   }
 
-  async assertWrongPassword(): Promise<void> {
-    await expect(this.errorPasswordMessage).toBeVisible();
+  async assertTooShortUsername(): Promise<void> {
+    await expect(this.tooShortUsernameMessage).toBeVisible();
+  }
+
+  async assertEmptyPassword(): Promise<void> {
+    await expect(this.emptyPasswordMessage).toBeVisible();
+  }
+
+  async assertTooShortPassword(): Promise<void> {
+    await expect(this.tooShortPasswordMessage).toBeVisible();
   }
 
   async assertLoginVisible() {

@@ -1,46 +1,63 @@
-import { test } from '../fixtures/test';
+import { test, expect } from '../fixtures/test';
 import { DesktopPage } from '../pages/DesktopPage';
+import { validUsers, invalidUsernames, invalidPasswords } from '../testData/loginData';
 
-test.beforeEach(async ({ loginPage }) => {
-  // Arrange
-  await loginPage.goTo();
+// TESTY POPRAWNE
+validUsers.forEach((user) => {
+
+  test(`Login success: ${user.description}`, async ({ loginPage, page }) => {
+
+    await loginPage.goTo();
+
+    await loginPage.login(user.username, user.password);
+    const desktopPage = new DesktopPage(page);
+
+    await expect(desktopPage.userFullName).toBeVisible();
+  });
+
 });
 
-test('login - valid credentials', async ({ loginPage, user, page }) => {
-  // Act
-  await loginPage.login(user.username, user.password);
 
-  // Assert
-  const desktopPage = new DesktopPage(page);
-  await desktopPage.userFullName.isVisible();
+// TESTY BŁĘDNE
+invalidUsernames.forEach((user) => {
+
+  test(`Wrong username: ${user.description}`, async ({ loginPage }) => {
+
+    await loginPage.goTo();
+
+    await loginPage.fillUsername(user.username);
+    await expect(loginPage.nextButton).toBeDisabled();
+
+    // asercje zależne od typu błędu
+    if (user.description === 'empty username') {
+      await loginPage.assertEmptyUsername();
+    }
+
+    if (user.description === 'too short username') {
+      await loginPage.assertTooShortUsername();
+    }
 });
+  });
 
-test('login - invalid (too short) username', async ({ loginPage }) => {
-  // Act
-  await loginPage.fillUsername('1234567');
+invalidPasswords.forEach((user) => {
 
-  // Assert
-  await loginPage.assertWrongUsername();
+  test(`Wrong password: ${user.description}`, async ({ loginPage }) => {
+
+    await loginPage.goTo();
+
+    await loginPage.fillUsername(user.username);
+    await loginPage.clickNext();
+
+    await loginPage.fillPassword(user.password);
+    await expect(loginPage.loginButton).toBeDisabled();
+
+    // asercje zależne od typu błędu
+   if (user.description === 'empty password') {
+      await loginPage.assertEmptyPassword();
+    }
+
+    if (user.description === 'too short password') {
+      await loginPage.assertTooShortPassword();
+    }
 });
-
-test('login - invalid (too short) password', async ({ loginPage }) => {
-  // Act
-  await loginPage.fillUsername('12345678');
-  await loginPage.clickNext();
-  await loginPage.fillPassword('abcdefg');
-
-  // Assert
-  await loginPage.assertWrongPassword();
-});
-
-test('logout', async ({ page, loginPage, user }) => {
-  // Arrange
-  const desktopPage = new DesktopPage(page);
-
-  // Act
-  await loginPage.login(user.username, user.password);
-  await desktopPage.logout();
-
-  // Assert
-  await loginPage.assertLoginVisible();
-});
+  });

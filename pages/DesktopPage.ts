@@ -8,7 +8,7 @@ export class DesktopPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.userFullName = page.getByLabel('Jan Demobankowy');
+    this.userFullName = page.locator('#user_name', {hasText: 'Jan Demobankowy'});
     this.logoutButton = page.locator('#log_out');
   }
 
