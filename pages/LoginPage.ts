@@ -23,7 +23,7 @@ export class LoginPage {
     this.tooShortPasswordMessage = page.getByText('hasło ma min. 8 znaków');
   }
 
-  async goTo(): Promise<void> {
+  async goTo() {
     await this.page.goto('/logowanie_etap_1.html');
   }
 
@@ -45,7 +45,7 @@ export class LoginPage {
     await this.loginButton.click();
   }
 
-  async login(username: string, password: string): Promise<void> {
+  async login(username: string, password: string) {
     await this.fillUsername(username);
     await expect(this.nextButton).toBeEnabled();
     await this.clickNext();
@@ -54,19 +54,19 @@ export class LoginPage {
     await this.clickLogin();
   }
   
-  async assertEmptyUsername(): Promise<void> {
+  async assertEmptyUsername() {
     await expect(this.emptyUsernameMessage).toBeVisible();
   }
 
-  async assertTooShortUsername(): Promise<void> {
+  async assertTooShortUsername() {
     await expect(this.tooShortUsernameMessage).toBeVisible();
   }
 
-  async assertEmptyPassword(): Promise<void> {
+  async assertEmptyPassword() {
     await expect(this.emptyPasswordMessage).toBeVisible();
   }
 
-  async assertTooShortPassword(): Promise<void> {
+  async assertTooShortPassword() {
     await expect(this.tooShortPasswordMessage).toBeVisible();
   }
 

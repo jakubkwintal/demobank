@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures/test';
-import { DesktopPage } from '../pages/DesktopPage';
+import { DashboardPage } from '../pages/DashboardPage';
 import { validUsers, invalidUsernames, invalidPasswords } from '../testData/loginData';
 
 // TESTY POPRAWNE
@@ -10,9 +10,9 @@ validUsers.forEach((user) => {
     await loginPage.goTo();
 
     await loginPage.login(user.username, user.password);
-    const desktopPage = new DesktopPage(page);
+    const dashboardPage = new DashboardPage(page);
 
-    await expect(desktopPage.userFullName).toBeVisible();
+    await expect(dashboardPage.userFullName).toBeVisible();
   });
 
 });
