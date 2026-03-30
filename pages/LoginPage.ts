@@ -1,7 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 export class LoginPage {
-  // readonly page: Page
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
@@ -12,7 +11,6 @@ export class LoginPage {
   readonly tooShortPasswordMessage: Locator;
 
   constructor(private page: Page) {
-    this.page = page;
     this.usernameInput = page.locator('#login_id');
     this.passwordInput = page.locator('#login_password');
     this.nextButton = page.getByRole('button', { name: 'dalej' });
@@ -37,6 +35,7 @@ export class LoginPage {
   }
 
   async fillPassword(password: string) {
+    await this.passwordInput.click();
     await this.passwordInput.fill(password);
     await this.page.keyboard.press('Tab');
   }
