@@ -24,8 +24,11 @@ test('Make quick transfer', async ({ page }) => {
   }
 });
 
-test('Check menu items', async ({ page }) => {
+test.only('Check menu items', async ({ page }) => {
   const dashboardPage = new DashboardPage(page);
 
   await dashboardPage.assertMenuVisible();
 });
+
+
+

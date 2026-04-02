@@ -77,7 +77,7 @@ export class DashboardPage {
 
   async assertMenuVisible() {
     for (const item of this.menuItems) {
-      await expect(item.locator, `${item.name} is not visible`).toBeVisible();
+      await expect.soft(item.locator, `${item.name} is not visible`).toBeVisible();
     }
   }
 
