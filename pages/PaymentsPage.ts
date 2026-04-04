@@ -1,6 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 
-export class TransferPage {
+export class PaymentsPage {
   readonly page: Page;
 
   readonly fromAccount: Locator;
@@ -38,7 +38,9 @@ export class TransferPage {
     this.receiverName = page.locator('#form_receiver');
     this.toAccount = page.locator('#form_account_to');
 
-    this.addressFormToggle = page.locator('.i-show');
+    this.addressFormToggle = page.locator(
+      '[data-target="form_address"]:visible',
+    );
     this.streetAndNumber = page.locator('#form_receiver_address1');
     this.postalCodeAndCity = page.locator('#form_receiver_address2');
     this.addressAdditionalField = page.locator('#form_receiver_address3');
@@ -48,7 +50,10 @@ export class TransferPage {
     this.accountBalanceAfterTransfer = page.locator('#form_after_transfer');
 
     this.paymentTitle = page.locator('#form_title');
-    this.calendarIcon = page.locator('#form_ico_calendar');
+
+    this.calendarIcon = page.locator(
+      '#form_ico_calendar i[data-target="form_date"]',
+    );
 
     this.transferCost = page.locator('#form_fee');
 
@@ -63,14 +68,28 @@ export class TransferPage {
     this.transferMessage = page.locator('#show_messages');
   }
 
-  //   .fill('00 1111 2222 4444 5555 6666 77778');
-
   async fillAccounts(
     fromAccountValue: string,
     receiverNameValue: string,
     toAccountValue: string,
   ) {
-    await this.fromAccount.selectOption({ label: fromAccountValue });
+    const option = await this.fromAccount
+      .locator('option')
+      .filter({
+        hasText: fromAccountValue,
+      })
+      .first();
+
+    if (!option) {
+      throw new Error(`Nie znaleziono konta ${fromAccountValue}`);
+    }
+
+    const value = await option.getAttribute('value');
+    if (!value) {
+      throw new Error(`Nie znaleziono ${fromAccountValue}`);
+    }
+    await this.fromAccount.selectOption({ value });
+
     await this.receiverName.fill(receiverNameValue);
     await this.toAccount.fill(toAccountValue);
   }
@@ -89,19 +108,45 @@ export class TransferPage {
 
   async fillAmountAndCheckBalance(amountValue: string) {
     const accountBalanceValue = parseFloat(
-      (await this.accountBalance.textContent())?.trim() || '0',
+      (await this.accountBalance.textContent())
+        ?.trim()
+        .replace(/ /g, '')
+        .replace(',', '.') || '0',
     );
+
+    console.log('accountBalanceValue: ' + accountBalanceValue);
 
     await this.amount.fill(amountValue);
     await this.amount.blur();
 
     const accountBalanceAfterTransferValue = parseFloat(
-      (await this.accountBalanceAfterTransfer.textContent())?.trim() || '0',
+      (await this.accountBalanceAfterTransfer.textContent())
+        ?.trim()
+        .replace(/ /g, '')
+        .replace(',', '.') || '0',
     );
 
-    const amountNumber = parseFloat(amountValue);
+    console.log(
+      'accountBalanceAfterTransferValue: ' + accountBalanceAfterTransferValue,
+    );
+
+    const amountNumber = parseFloat(amountValue.replace(',', '.'));
+
+    console.log('amount number: ' + amountNumber);
+
     const balanceDifference =
       accountBalanceValue - accountBalanceAfterTransferValue;
+
+    console.log(
+      'accountBalanceValue ' +
+        accountBalanceValue +
+        ' - ' +
+        'accountBalanceAfterTransferValue ' +
+        accountBalanceAfterTransferValue +
+        ' = ' +
+        'balanceDifference ' +
+        balanceDifference,
+    );
 
     expect(balanceDifference).toBe(amountNumber);
   }
@@ -114,24 +159,23 @@ export class TransferPage {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const targetMonth = tomorrow.toLocaleString('pl-PL', { month: 'long' });
-    const targetYear = tomorrow.getFullYear().toString();
-    const day = tomorrow.getDate().toString();
+    const targetDay = tomorrow.getDate().toString();
+    const currentMonth = new Date().getMonth();
+    const targetMonth = tomorrow.getMonth();
 
-    const currentMonth = await this.page
-      .locator('.ui-datepicker-month')
-      .textContent();
-    const currentYear = await this.page
-      .locator('.ui-datepicker-year')
-      .textContent();
+    // otwórz datepicker
+    await this.calendarIcon.click();
 
-    if (currentMonth !== targetMonth || currentYear !== targetYear) {
+    const calendar = this.page.locator('#ui-datepicker-div');
+    await expect(calendar).toBeVisible();
+
+    // jeśli jutro jest w kolejnym miesiącu → kliknij raz "next"
+    if (targetMonth !== currentMonth) {
       await this.page.locator('.ui-datepicker-next').click();
     }
 
-    await this.page
-      .locator('.ui-datepicker-calendar a', { hasText: day })
-      .click();
+    // kliknij dzień (tylko z aktualnego miesiąca!)
+    await this.page.getByRole('link', { name: targetDay, exact: true }).click();
   }
 
   async selectTransferType(type: 'ekspresowy' | 'zwykły') {
@@ -145,10 +189,10 @@ export class TransferPage {
   }
 
   async sendEmailConfirmation(
-    wantConfirmation: boolean,
+    wantConfirmationValue: boolean,
     emailAddressValue?: string,
   ) {
-    if (wantConfirmation) {
+    if (wantConfirmationValue) {
       await this.emailConfirmation.check();
 
       if (!emailAddressValue?.trim()) {
@@ -162,11 +206,11 @@ export class TransferPage {
   }
 
   async saveReceiver(
-    wantSaveReceiver: boolean,
+    wantSaveReceiverValue: boolean,
     receiverToSaveValue?: string,
     asTrustedValue?: boolean,
   ) {
-    if (wantSaveReceiver) {
+    if (wantSaveReceiverValue) {
       await this.addToReceiverList.check();
 
       if (!receiverToSaveValue?.trim()) {
