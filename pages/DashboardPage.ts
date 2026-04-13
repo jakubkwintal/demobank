@@ -73,9 +73,9 @@ export class DashboardPage {
     return new LoginPage(this.page);
   }
 
-  // Menu
+  // MENU
 
-  async assertMenuVisible() {
+  async checkMenuVisibility() {
     for (const item of this.menuItems) {
       await expect
         .soft(item.locator, `${item.name} is not visible`)
@@ -83,7 +83,7 @@ export class DashboardPage {
     }
   }
 
-  //  Quick transfer
+  //  QUICK TRANSFER
 
   async selectReceiver(receiver: string) {
     await this.quickTransferReceiverList.selectOption({ label: receiver });

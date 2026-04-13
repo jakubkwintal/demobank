@@ -1,16 +1,14 @@
-import { beforeEach } from 'node:test';
 import { test } from '../fixtures/test';
-import { DashboardPage } from '../pages/DashboardPage';
 import { quickTransfers } from '../testData/dashboadData';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/pulpit.html');
 });
 
-test('Make quick transfer', async ({ page }) => {
-  const dashboardPage = new DashboardPage(page);
-
-  for (const transferData of quickTransfers) {
+quickTransfers.forEach((transferData) => {
+  test(`Make quick transfer', ${transferData.receiver}`, async ({
+    dashboardPage,
+  }) => {
     await dashboardPage.makeQuickTransfer(
       transferData.receiver,
       transferData.amount,
@@ -21,14 +19,9 @@ test('Make quick transfer', async ({ page }) => {
       transferData.amount,
       transferData.title,
     );
-  }
+  });
 });
 
-test.only('Check menu items', async ({ page }) => {
-  const dashboardPage = new DashboardPage(page);
-
-  await dashboardPage.assertMenuVisible();
+test('Check menu items', async ({ dashboardPage }) => {
+  await dashboardPage.checkMenuVisibility();
 });
-
-
-
