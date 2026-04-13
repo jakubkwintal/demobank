@@ -1,4 +1,4 @@
-// poprawne dane
+// CORRECT DATA
 export const validUsers = [
   {
     description: 'poprawne dane, same cyfry',
@@ -17,7 +17,7 @@ export const validUsers = [
   },
 ];
 
-// błędne dane
+// INCORRECT DATA
 export const invalidUsernames = [
   {
     description: 'empty username',
@@ -26,6 +26,10 @@ export const invalidUsernames = [
   {
     description: 'too short username',
     username: '1234567',
+  },
+  {
+    description: 'too short username - only one character',
+    username: 'x',
   },
 ];
 
