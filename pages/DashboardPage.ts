@@ -35,7 +35,7 @@ export class DashboardPage {
     this.calendar = page.getByRole('link', { name: 'kalendarz' });
     this.cardBlocking = page.getByRole('link', { name: 'zastrzeżenia' });
     this.accounts = page.getByRole('link', { name: 'konta osobiste' });
-    this.payments = page.getByRole('link', { name: 'płatności' });
+    this.payments = page.locator('#payments_btn');
     this.reports = page.locator('#reports_btn');
     this.charts = page.locator('#charts_btn');
     this.settings = page.getByRole('link', { name: 'ustawienia' });
@@ -77,7 +77,9 @@ export class DashboardPage {
 
   async assertMenuVisible() {
     for (const item of this.menuItems) {
-      await expect.soft(item.locator, `${item.name} is not visible`).toBeVisible();
+      await expect
+        .soft(item.locator, `${item.name} is not visible`)
+        .toBeVisible();
     }
   }
 
