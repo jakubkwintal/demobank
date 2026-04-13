@@ -1,3 +1,5 @@
+import { TransferType } from './payments.enums';
+
 export type PaymentsData = {
   accounts: {
     fromAccountValue: string;
@@ -16,7 +18,7 @@ export type PaymentsData = {
     paymentTitleValue: string;
   };
   transferType: {
-    transferTypeValue: 'zwykły' | 'ekspresowy';
+    transferTypeValue: TransferType;
   };
   email: {
     wantConfirmationValue: boolean;

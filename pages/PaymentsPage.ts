@@ -166,7 +166,7 @@ export class PaymentsPage {
 
       await this.receiverToSave.fill(name.trim());
 
-      if (trusted) await this.asTrusted.check(); // ✅ lepiej niż click
+      if (trusted) await this.asTrusted.check();
     } else {
       await this.addToReceiverList.uncheck();
     }
@@ -178,9 +178,7 @@ export class PaymentsPage {
     await expect(this.transferMessage).toBeVisible();
   }
 
-  // -----------------------------
-  // HIGH-LEVEL (clean + scalable)
-  // -----------------------------
+ 
   async makePayment(data: PaymentsData) {
     await this.fillAccounts(
       data.accounts.fromAccountValue,

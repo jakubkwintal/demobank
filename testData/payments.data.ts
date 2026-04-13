@@ -1,4 +1,5 @@
 import { PaymentsData } from './payments.types';
+import { TransferType } from './payments.enums';
 
 export const paymentsData: PaymentsData = {
   accounts: {
@@ -18,7 +19,7 @@ export const paymentsData: PaymentsData = {
     paymentTitleValue: 'Tytuł przelewu testowego',
   },
   transferType: {
-    transferTypeValue: 'ekspresowy', // ✅ OK (pasuje do union type)
+    transferTypeValue: TransferType.EXPRESS,
   },
   email: {
     wantConfirmationValue: true,

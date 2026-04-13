@@ -1,6 +1,5 @@
 import { test } from '../fixtures/test';
-import { DashboardPage } from '../pages/DashboardPage';
-import { PaymentsData } from '../testData/payments.types';
+import { TransferType } from '../testData/payments.enums';
 
 test.describe('Payments', () => {
   test('Make express payment', async ({ paymentsPage, paymentsData }) => {
@@ -9,9 +8,9 @@ test.describe('Payments', () => {
   });
 
   test('Make normal payment', async ({ paymentsPage, paymentsData }) => {
-    const normalPayment: PaymentsData = {
+    const normalPayment = {
       ...paymentsData,
-      transferType: { transferTypeValue: 'zwykły' },
+      transferType: { transferTypeValue: TransferType.NORMAL },
     };
 
     await paymentsPage.makePayment(normalPayment);
@@ -22,10 +21,10 @@ test.describe('Payments', () => {
     paymentsPage,
     paymentsData,
   }) => {
-    const paymentWithoutAddress: PaymentsData = {
+    const paymentWithoutAddress = {
       ...paymentsData,
       address: undefined,
-      transferType: { transferTypeValue: 'zwykły' },
+      transferType: { transferTypeValue: TransferType.NORMAL },
     };
 
     await paymentsPage.makePayment(paymentWithoutAddress);
