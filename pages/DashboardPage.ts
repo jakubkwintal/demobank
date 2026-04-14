@@ -73,6 +73,12 @@ export class DashboardPage {
     return new LoginPage(this.page);
   }
 
+  // LOGGED IN USER
+
+  async assertUserLoggedIn() {
+    await expect(this.userFullName).toBeVisible();
+  }
+
   // MENU
 
   async checkMenuItemsVisibility() {

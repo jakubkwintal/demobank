@@ -2,7 +2,12 @@ import { test } from '../fixtures/test';
 import { quickTransfers } from '../testData/dashboad.data';
 
 test.describe('Dashboard', () => {
+
   // Tests covering basic dashboard operations
+  test.beforeEach(async ({ dashboardPage }) => {
+    await dashboardPage.goTo();
+  });
+
   for (const transferData of quickTransfers) {
     test(`should complete quick transfer successfully - ${transferData.receiver}`, async ({
       dashboardPage,

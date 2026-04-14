@@ -1,5 +1,4 @@
 import { test, expect } from '../fixtures/test';
-import { DashboardPage } from '../pages/DashboardPage';
 import {
   validUsers,
   invalidUsernames,
@@ -10,7 +9,6 @@ test.describe('Login', () => {
   // Login tests - successful and unsuccessful scenarios
   // Login fixture is not used here to avoid pre-authenticated state
   test.beforeEach(async ({ loginPage }) => {
-    //
     await loginPage.goTo();
   });
 
@@ -18,11 +16,11 @@ test.describe('Login', () => {
   for (const user of validUsers) {
     test(`should login successfully - ${user.description}`, async ({
       loginPage,
-      page,
+      dashboardPage
     }) => {
       await loginPage.login(user.username, user.password);
-      const dashboardPage = new DashboardPage(page);
-      await expect(dashboardPage.userFullName).toBeVisible();
+
+      await dashboardPage.assertUserLoggedIn();
     });
   }
 
