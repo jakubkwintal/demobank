@@ -6,6 +6,7 @@ export const dashboardPageFixture = {
     { page }: { page: Page },
     use: (dashboardPage: DashboardPage) => Promise<void>
   ) => {
+    await page.goto('/pulpit.html');
     const dashboardPage = new DashboardPage(page);
     await use(dashboardPage);
   },

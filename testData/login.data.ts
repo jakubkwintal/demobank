@@ -3,17 +3,17 @@ import { LoginPage } from '../pages/LoginPage';
 // CORRECT DATA
 export const validUsers = [
   {
-    description: 'poprawne dane, same cyfry',
+    description: 'correct data, only numbers',
     username: '12345678',
     password: '12345678',
   },
   {
-    description: 'poprawne dane, same litery',
+    description: 'correct data, only letters',
     username: 'AbCdEfGh',
     password: 'oPrStUwY',
   },
   {
-    description: 'poprawne dane, różne znaki',
+    description: 'correct data, various characters',
     username: 'a$c&12?H',
     password: '!@A_#e7^',
   },
