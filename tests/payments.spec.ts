@@ -2,12 +2,12 @@ import { test } from '../fixtures/test';
 import { TransferType } from '../testData/payments.enums';
 
 test.describe('Payments', () => {
-  test('Make express payment', async ({ paymentsPage, paymentsData }) => {
+  test('should complete express payment successfully', async ({ paymentsPage, paymentsData }) => {
     await paymentsPage.makePayment(paymentsData);
     await paymentsPage.completeTransfer();
   });
 
-  test('Make normal payment', async ({ paymentsPage, paymentsData }) => {
+  test('should complete normal payment with no fee', async ({ paymentsPage, paymentsData }) => {
     const normalPayment = {
       ...paymentsData,
       transferType: { transferTypeValue: TransferType.NORMAL },
@@ -17,7 +17,7 @@ test.describe('Payments', () => {
     await paymentsPage.completeTransfer();
   });
 
-  test('Make payment without address', async ({
+  test('should complete payment without providing address', async ({
     paymentsPage,
     paymentsData,
   }) => {

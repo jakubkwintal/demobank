@@ -75,7 +75,7 @@ export class DashboardPage {
 
   // MENU
 
-  async checkMenuVisibility() {
+  async checkMenuItemsVisibility() {
     for (const item of this.menuItems) {
       await expect
         .soft(item.locator, `${item.name} is not visible`)
