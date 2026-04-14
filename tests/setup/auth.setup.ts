@@ -5,7 +5,7 @@ setup('API login', async ({ page }) => {
   const loginPage = new LoginPage(page);
 
   await loginPage.goTo();
-  await loginPage.login('loginABC', 'pass123!');
+  await loginPage.login(process.env.USERNAME!, process.env.PASSWORD!);
 
   await page.context().storageState({ path: './storage/storageState.json' });
 });

@@ -4,5 +4,8 @@
     "@types/node": "^25.6.0",
     "prettier": "3.8.1"
   },
-  "scripts": {}
+  "scripts": {},
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  }
 }
