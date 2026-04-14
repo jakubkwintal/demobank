@@ -33,7 +33,7 @@ export default defineConfig({
     baseURL: 'https://demobank.jaktestowac.pl/',
     storageState: './storage/storageState.json',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on',
+    trace: 'retain-on-failure',
   },
 
   /* Configure projects for major browsers */
@@ -80,14 +80,14 @@ export default defineConfig({
     },
     {
       name: 'login',
-      testMatch: /.*login.*\.spec\.ts/, // 👈 tylko login testy
+      testMatch: /.*login.*\.spec\.ts/, // only login tests
       use: {
         storageState: undefined,
       },
     },
     {
       name: 'tests',
-      testIgnore: /.*login.*\.spec\.ts/, // 👈 wyklucz login
+      testIgnore: /.*login.*\.spec\.ts/, // ignore login tests
       dependencies: ['setup'],
       use: {
         storageState: './storage/storageState.json',
