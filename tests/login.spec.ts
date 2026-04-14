@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures/test';
+import { DashboardPage } from '../pages/DashboardPage';
 import {
   validUsers,
   invalidUsernames,
@@ -17,10 +18,10 @@ test.describe('Login', () => {
   for (const user of validUsers) {
     test(`should login successfully - ${user.description}`, async ({
       loginPage,
-      dashboardPage,
+      page,
     }) => {
       await loginPage.login(user.username, user.password);
-
+      const dashboardPage = new DashboardPage(page);
       await expect(dashboardPage.userFullName).toBeVisible();
     });
   }
