@@ -1,5 +1,4 @@
 import { test, expect } from '../fixtures/test';
-import { DashboardPage } from '../pages/DashboardPage';
 import {
   validUsers,
   invalidUsernames,
@@ -7,26 +6,28 @@ import {
 } from '../testData/login.data';
 
 test.describe('Login', () => {
+  // Login tests - successful and unsuccessful scenarios
+  // Login fixture is not used here to avoid pre-authenticated state
   test.beforeEach(async ({ loginPage }) => {
+    //
     await loginPage.goTo();
   });
 
   // SUCCESSFUL LOGIN
-  validUsers.forEach((user) => {
+  for (const user of validUsers) {
     test(`should login successfully - ${user.description}`, async ({
       loginPage,
-      page,
+      dashboardPage,
     }) => {
       await loginPage.login(user.username, user.password);
-      const dashboardPage = new DashboardPage(page);
 
       await expect(dashboardPage.userFullName).toBeVisible();
     });
-  });
+  }
 
   // UNSUCCESSFUL LOGIN
 
-  invalidUsernames.forEach((user) => {
+  for (const user of invalidUsernames) {
     test(`should show error for invalid username - ${user.description}`, async ({
       loginPage,
     }) => {
@@ -35,9 +36,9 @@ test.describe('Login', () => {
 
       await user.assertion(loginPage);
     });
-  });
+  }
 
-  invalidPasswords.forEach((user) => {
+  for (const user of invalidPasswords) {
     test(`should show error for invalid password - ${user.description}`, async ({
       loginPage,
     }) => {
@@ -49,5 +50,5 @@ test.describe('Login', () => {
 
       await user.assertion(loginPage);
     });
-  });
+  }
 });

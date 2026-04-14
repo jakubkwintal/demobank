@@ -2,12 +2,21 @@ import { test } from '../fixtures/test';
 import { TransferType } from '../testData/payments.enums';
 
 test.describe('Payments', () => {
-  test('should complete express payment successfully', async ({ paymentsPage, paymentsData }) => {
+  // Tests covering different transfer types and optional fields
+  test('should complete express payment successfully', async ({
+    paymentsPage,
+    paymentsData,
+  }) => {
+    // EXPRESS transfer type is default
     await paymentsPage.makePayment(paymentsData);
     await paymentsPage.completeTransfer();
   });
 
-  test('should complete normal payment with no fee', async ({ paymentsPage, paymentsData }) => {
+  test('should complete normal payment with no fee', async ({
+    paymentsPage,
+    paymentsData,
+  }) => {
+    // override transfer type to NORMAL (no transfer fee expected)
     const normalPayment = {
       ...paymentsData,
       transferType: { transferTypeValue: TransferType.NORMAL },
