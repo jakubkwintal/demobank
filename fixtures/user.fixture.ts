@@ -4,10 +4,10 @@ export type User = {
 };
 
 export const userFixture = {
-  user: async ({}: any, use: (arg0: { username: string; password: string; }) => any) => {
+  user: async (_: unknown, use: (arg0: { username: string; password: string; }) => any) => {
     await use({
-      username: 'jakubkwi',
-      password: 'pass123!',
+      username: process.env.USERNAME!,
+      password: process.env.PASSWORD!,
     });
   },
 };

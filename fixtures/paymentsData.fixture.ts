@@ -1,4 +1,5 @@
 import { PaymentsData } from '../testData/payments.types';
+import { TransferType } from '../testData/payments.enums';
 
 export const paymentsDataFixture = {
   paymentData: async (
@@ -23,7 +24,7 @@ export const paymentsDataFixture = {
         paymentTitleValue: 'Tytuł przelewu testowego',
       },
       transferType: {
-        transferTypeValue: 'ekspresowy',
+        transferTypeValue: TransferType.EXPRESS,
       },
       email: {
         wantConfirmationValue: true,
