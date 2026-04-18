@@ -1,88 +1,115 @@
 import { Page, Locator, expect } from '@playwright/test';
-import { PaymentsData } from '../testData/payments.types';
+import { Payment } from '../testData/payments.types';
+import { TransferType } from '../testData/payments.enums';
 
 export class PaymentsPage {
   readonly page: Page;
 
+  // ACCOUNTS
   readonly fromAccount: Locator;
   readonly receiverName: Locator;
   readonly toAccount: Locator;
+
+  // ADDRESS
   readonly addressFormToggle: Locator;
   readonly streetAndNumber: Locator;
   readonly postalCodeAndCity: Locator;
   readonly addressAdditionalField: Locator;
+
+  // AMOUNT
   readonly amount: Locator;
   readonly accountBalance: Locator;
   readonly accountBalanceAfterTransfer: Locator;
+
+  // PAYMENT DETAILS
   readonly paymentTitle: Locator;
   readonly calendarIcon: Locator;
   readonly transferCost: Locator;
+
+  // EMAIL
   readonly emailConfirmation: Locator;
   readonly emailAddress: Locator;
+
+  // RECEIVER SAVE
   readonly addToReceiverList: Locator;
   readonly receiverToSave: Locator;
   readonly asTrusted: Locator;
+
+  // ACTIONS
   readonly confirmTransferButton: Locator;
   readonly transferMessage: Locator;
 
   constructor(page: Page) {
     this.page = page;
 
+    // ACCOUNTS
     this.fromAccount = page.locator('#form_account_from');
     this.receiverName = page.locator('#form_receiver');
     this.toAccount = page.locator('#form_account_to');
 
-    this.addressFormToggle = page.locator(
-      '[data-target="form_address"]:visible',
-    );
+    // ADDRESS
+    this.addressFormToggle = page.locator('[data-target="form_address"]:visible');
     this.streetAndNumber = page.locator('#form_receiver_address1');
     this.postalCodeAndCity = page.locator('#form_receiver_address2');
     this.addressAdditionalField = page.locator('#form_receiver_address3');
 
+    // AMOUNT
     this.amount = page.locator('#form_amount');
     this.accountBalance = page.locator('#form_account_amount');
     this.accountBalanceAfterTransfer = page.locator('#form_after_transfer');
 
+    // PAYMENT DETAILS
     this.paymentTitle = page.locator('#form_title');
-
-    this.calendarIcon = page.locator(
-      '#form_ico_calendar i[data-target="form_date"]',
-    );
-
+    this.calendarIcon = page.locator('#form_ico_calendar i[data-target="form_date"]');
     this.transferCost = page.locator('#form_fee');
 
+    // EMAIL
     this.emailConfirmation = page.locator('#form_is_email');
     this.emailAddress = page.locator('#form_email');
 
+    // RECEIVER SAVE
     this.addToReceiverList = page.locator('#form_add_receiver');
     this.receiverToSave = page.locator('#form_receiver_name');
     this.asTrusted = page.locator('#form_trusted');
 
+    // ACTIONS
     this.confirmTransferButton = page.getByRole('link', { name: 'dalej' });
     this.transferMessage = page.locator('#show_messages');
   }
 
+  // -----------------------------
+  // NAVIGATION
+  // -----------------------------
+  async goTo() {
+    await this.page.goto('/przelew_nowy_zew.html');
+  }
+
+  // -----------------------------
+  // ACCOUNTS
+  // -----------------------------
   async fillAccounts(from: string, receiver: string, to: string) {
-  const option = this.fromAccount
-    .locator('option')
-    .filter({ hasText: from })
-    .first();
+    const option = this.fromAccount
+      .locator('option')
+      .filter({ hasText: from })
+      .first();
 
-  await expect(option).toHaveCount(1);
+    await expect(option).toHaveCount(1);
 
-  const value = await option.getAttribute('value');
-  if (!value) throw new Error(`Nie znaleziono ${from}`);
+    const value = await option.getAttribute('value');
+    if (!value) throw new Error(`Nie znaleziono ${from}`);
 
-  await this.fromAccount.selectOption({ value });
+    await this.fromAccount.selectOption({ value });
+    await this.receiverName.fill(receiver);
+    await this.toAccount.fill(to);
+  }
 
-  await this.receiverName.fill(receiver);
-  await this.toAccount.fill(to);
-}
-
+  // -----------------------------
+  // ADDRESS
+  // -----------------------------
   async fillReceiverAddress(
     street: string,
     postalCity: string,
-    additional: string,
+    additional: string
   ) {
     await this.addressFormToggle.click();
     await expect(this.streetAndNumber).toBeVisible();
@@ -92,12 +119,15 @@ export class PaymentsPage {
     await this.addressAdditionalField.fill(additional);
   }
 
+  // -----------------------------
+  // AMOUNT
+  // -----------------------------
   async fillAmountAndCheckBalance(amountValue: string) {
     const balanceBefore = parseFloat(
       (await this.accountBalance.textContent())
         ?.trim()
         .replace(/ /g, '')
-        .replace(',', '.') || '0',
+        .replace(',', '.') || '0'
     );
 
     await this.amount.fill(amountValue);
@@ -107,14 +137,17 @@ export class PaymentsPage {
       (await this.accountBalanceAfterTransfer.textContent())
         ?.trim()
         .replace(/ /g, '')
-        .replace(',', '.') || '0',
+        .replace(',', '.') || '0'
     );
 
     expect(balanceBefore - balanceAfter).toBe(
-      parseFloat(amountValue.replace(',', '.')),
+      parseFloat(amountValue.replace(',', '.'))
     );
   }
 
+  // -----------------------------
+  // PAYMENT DETAILS
+  // -----------------------------
   async fillPaymentTitle(title: string) {
     await this.paymentTitle.fill(title);
   }
@@ -139,13 +172,16 @@ export class PaymentsPage {
     await this.page.getByRole('link', { name: day, exact: true }).click();
   }
 
-  async selectTransferType(type: 'ekspresowy' | 'zwykły') {
+  async selectTransferType(type: TransferType) {
     await this.page.getByRole('radio', { name: type }).check();
 
-    const expected = type === 'zwykły' ? '0,00' : '5,00';
+    const expected = type === TransferType.NORMAL ? '0,00' : '5,00';
     await expect(this.transferCost).toHaveText(expected);
   }
 
+  // -----------------------------
+  // EMAIL
+  // -----------------------------
   async sendEmailConfirmation(want: boolean, email?: string) {
     if (want) {
       await this.emailConfirmation.check();
@@ -158,6 +194,9 @@ export class PaymentsPage {
     }
   }
 
+  // -----------------------------
+  // RECEIVER
+  // -----------------------------
   async saveReceiver(want: boolean, name?: string, trusted?: boolean) {
     if (want) {
       await this.addToReceiverList.check();
@@ -172,25 +211,32 @@ export class PaymentsPage {
     }
   }
 
+  // -----------------------------
+  // ACTIONS
+  // -----------------------------
   async completeTransfer() {
     await expect(this.confirmTransferButton).toBeEnabled();
+
     await this.confirmTransferButton.click();
+
     await expect(this.transferMessage).toBeVisible();
   }
 
- 
-  async makePayment(data: PaymentsData) {
+  // -----------------------------
+  // PAYMENT FLOW
+  // -----------------------------
+  async makePayment(data: Payment) {
     await this.fillAccounts(
       data.accounts.fromAccountValue,
       data.accounts.receiverNameValue,
-      data.accounts.toAccountValue,
+      data.accounts.toAccountValue
     );
 
     if (data.address) {
       await this.fillReceiverAddress(
         data.address.streetAndNumberValue,
         data.address.postalCodeAndCityValue,
-        data.address.addressAdditionalFieldValue,
+        data.address.addressAdditionalFieldValue
       );
     }
 
@@ -202,7 +248,7 @@ export class PaymentsPage {
     if (data.email) {
       await this.sendEmailConfirmation(
         data.email.wantConfirmationValue,
-        data.email.emailConfirmationValue,
+        data.email.emailConfirmationValue
       );
     }
 
@@ -210,7 +256,7 @@ export class PaymentsPage {
       await this.saveReceiver(
         data.receiver.wantSaveReceiverValue,
         data.receiver.receiverToSaveValue,
-        data.receiver.asTrustedValue,
+        data.receiver.asTrustedValue
       );
     }
   }

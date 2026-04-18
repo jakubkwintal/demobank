@@ -1,7 +1,8 @@
 import { LoginPage } from '../pages/LoginPage';
+import { InvalidPassword, InvalidUsername, ValidUser } from './login.types';
 
 // CORRECT DATA
-export const validUsers = [
+export const validUsers: ValidUser[] = [
   {
     description: 'correct data, only numbers',
     username: '12345678',
@@ -20,36 +21,36 @@ export const validUsers = [
 ];
 
 // INCORRECT DATA
-export const invalidUsernames = [
+export const invalidUsernames: InvalidUsername[] = [
   {
     description: 'empty username',
     username: '',
-    assertion: async (loginPage: LoginPage) => {
+    assertion: async (loginPage) => {
       await loginPage.assertEmptyUsername();
     },
   },
   {
     description: 'too short username',
     username: '1234567',
-    assertion: async (loginPage: LoginPage) => {
+    assertion: async (loginPage) => {
       await loginPage.assertTooShortUsername();
     },
   },
   {
     description: 'too short username - only one character',
     username: 'x',
-    assertion: async (loginPage: LoginPage) => {
+    assertion: async (loginPage) => {
       await loginPage.assertTooShortUsername();
     },
   },
 ];
 
-export const invalidPasswords = [
+export const invalidPasswords: InvalidPassword[] = [
   {
     description: 'empty password',
     username: '12345678',
     password: '',
-    assertion: async (loginPage: LoginPage) => {
+    assertion: async (loginPage) => {
       await loginPage.assertEmptyPassword();
     },
   },
@@ -57,7 +58,7 @@ export const invalidPasswords = [
     description: 'too short password',
     username: '12345678',
     password: '1234567',
-    assertion: async (loginPage: LoginPage) => {
+    assertion: async (loginPage) => {
       await loginPage.assertTooShortPassword();
     },
   },
@@ -65,7 +66,7 @@ export const invalidPasswords = [
     description: 'too short password - only one character',
     username: '12345678',
     password: 'q',
-    assertion: async (loginPage: LoginPage) => {
+    assertion: async (loginPage) => {
       await loginPage.assertTooShortPassword();
     },
   },

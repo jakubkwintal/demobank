@@ -3,6 +3,10 @@ import { TransferType } from '../testData/payments.enums';
 
 test.describe('Payments', () => {
   // Tests covering different transfer types and optional fields
+  test.beforeEach(async ({ paymentsPage }) => {
+    await paymentsPage.goTo();
+  });
+
   test('should complete express payment successfully', async ({
     paymentsPage,
     paymentsData,

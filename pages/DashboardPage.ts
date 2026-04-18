@@ -1,11 +1,15 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { LoginPage } from './LoginPage';
+import { MenuItem } from '../testData/dashboard.types';
 
 export class DashboardPage {
   readonly page: Page;
+
+  // USER
   readonly userFullName: Locator;
   readonly logoutButton: Locator;
 
+  // MENU
   readonly myDashboard: Locator;
   readonly quickTransfer: Locator;
   readonly phoneTopUp: Locator;
@@ -16,8 +20,9 @@ export class DashboardPage {
   readonly reports: Locator;
   readonly charts: Locator;
   readonly settings: Locator;
-  readonly menuItems: { name: string; locator: Locator }[];
+  readonly menuItems: MenuItem[];
 
+  // QUICK TRANSFER
   readonly quickTransferReceiverList: Locator;
   readonly quickTransferAmount: Locator;
   readonly quickTransferTitle: Locator;
@@ -27,8 +32,11 @@ export class DashboardPage {
   constructor(page: Page) {
     this.page = page;
 
+    // USER
     this.userFullName = page.locator('#user_name');
     this.logoutButton = page.locator('#log_out');
+
+    // MENU
     this.myDashboard = page.getByRole('link', { name: 'mój pulpit' });
     this.quickTransfer = page.locator('#quick_btn');
     this.phoneTopUp = page.locator('#phone_btn');
@@ -53,6 +61,7 @@ export class DashboardPage {
       { name: 'Ustawienia', locator: this.settings },
     ];
 
+    // QUICK TRANSFER
     this.quickTransferReceiverList = page.locator(
       '#widget_1_transfer_receiver',
     );
@@ -64,6 +73,9 @@ export class DashboardPage {
     this.quickTransferMessage = page.locator('#show_messages');
   }
 
+  // -----------------------------
+  // NAVIGATION
+  // -----------------------------
   async goTo() {
     await this.page.goto('/pulpit.html');
   }
@@ -73,24 +85,26 @@ export class DashboardPage {
     return new LoginPage(this.page);
   }
 
-  // LOGGED IN USER
-
+  // -----------------------------
+  // USER
+  // -----------------------------
   async assertUserLoggedIn() {
     await expect(this.userFullName).toBeVisible();
   }
 
+  // -----------------------------
   // MENU
-
+  // -----------------------------
   async checkMenuItemsVisibility() {
-    for (const item of this.menuItems) {
-      await expect
-        .soft(item.locator, `${item.name} is not visible`)
-        .toBeVisible();
+    for (const { name, locator } of this.menuItems) {
+      await expect.soft(locator, `${name} is not visible`).toBeVisible();
+      await expect.soft(locator, `${name} is not enabled`).toBeEnabled();
     }
   }
 
-  //  QUICK TRANSFER
-
+  // -----------------------------
+  // QUICK TRANSFER
+  // -----------------------------
   async selectReceiver(receiver: string) {
     await this.quickTransferReceiverList.selectOption({ label: receiver });
   }

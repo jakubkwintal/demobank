@@ -1,6 +1,6 @@
 import { TransferType } from './payments.enums';
 
-export type PaymentsData = {
+export type Payment = {
   accounts: {
     fromAccountValue: string;
     receiverNameValue: string;

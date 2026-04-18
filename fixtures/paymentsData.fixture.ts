@@ -1,42 +1,11 @@
-import { PaymentsData } from '../testData/payments.types';
-import { TransferType } from '../testData/payments.enums';
+import { Payment } from '../testData/payments.types';
+import { basePayment } from '../testData/payments.data';
 
 export const paymentsDataFixture = {
-  paymentData: async (
-    {}: {}, 
-    use: (data: PaymentsData) => Promise<void>
-  ) => {
-    const data: PaymentsData = {
-      accounts: {
-        fromAccountValue: '[KO] konto na życie',
-        receiverNameValue: 'Franek Kimono',
-        toAccountValue: '00 1111 2222 4444 5555 6666 77778',
-      },
-      address: {
-        streetAndNumberValue: 'Wodnika Szuwarka 243D/11',
-        postalCodeAndCityValue: '89-200 Szubin',
-        addressAdditionalFieldValue: 'powiat nakielski',
-      },
-      amount: {
-        amountValue: '954,25',
-      },
-      title: {
-        paymentTitleValue: 'Tytuł przelewu testowego',
-      },
-      transferType: {
-        transferTypeValue: TransferType.EXPRESS,
-      },
-      email: {
-        wantConfirmationValue: true,
-        emailConfirmationValue: 'my_email@testset.com',
-      },
-      receiver: {
-        wantSaveReceiverValue: true,
-        receiverToSaveValue: 'Franek Kimono PRIV',
-        asTrustedValue: true,
-      },
-    };
-
-    await use(data);
+  // This fixture provides default payment test data
+  // and makes it available in tests as "paymentData"
+  paymentData: async ({}: {}, use: (data: Payment) => Promise<void>) => {
+    // pass the predefined base payment data to the test
+    await use(basePayment);
   },
 };

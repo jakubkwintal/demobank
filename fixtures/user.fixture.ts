@@ -4,7 +4,9 @@ export type User = {
 };
 
 export const userFixture = {
-  user: async (_: unknown, use: (arg0: { username: string; password: string; }) => any) => {
+  // This fixture provides user credentials from environment variables
+  // and makes them available in tests as "user"
+  user: async ({}: {}, use: (user: User) => Promise<void>) => {
     await use({
       username: process.env.USERNAME!,
       password: process.env.PASSWORD!,
