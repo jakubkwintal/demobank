@@ -152,7 +152,7 @@ export class PaymentsPage {
     await this.paymentTitle.fill(title);
   }
 
-  async selectTomorrowDate() {
+  async selectTomorrowDate() {   // Choosing tomorrow's date
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
 

@@ -67,7 +67,6 @@ export class LoginPage {
 
   async login(username: string, password: string) {
     await this.fillUsername(username);
-
     await expect(this.nextButton).toBeEnabled();
 
     await this.clickNext();
