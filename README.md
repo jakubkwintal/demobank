@@ -4,7 +4,7 @@ This project demonstrates my approach to building maintainable and scalable UI t
 
 ---
 
-## What’s inside?
+## 📦 What’s inside?
 
 ✔ **End-to-end UI tests**  
 Covers key user flows such as login, dashboard operations, quick transfers, and standard payments with more complex input.
@@ -26,8 +26,9 @@ Authentication is performed once and reused across tests, improving speed and st
 Login tests intentionally run without a saved session.
 
 ✔ **CI integration**  
-Tests run automatically on every push using GitHub Actions, with execution reports generated after each run.
 ![Playwright Tests](https://github.com/jakubkwintal/demobank/actions/workflows/playwright.yml/badge.svg)
+
+Latest GitHub Actions run status. Tests execute automatically on every push.
 
 
 ## 📫 Contact
