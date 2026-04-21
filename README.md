@@ -26,9 +26,7 @@ Authentication is performed once and reused across tests, improving speed and st
 Login tests intentionally run without a saved session.
 
 ✔ **CI integration**  
-![Playwright Tests](https://github.com/jakubkwintal/demobank/actions/workflows/playwright.yml/badge.svg)
-
-Latest GitHub Actions run status. Tests execute automatically on every push.
+![Playwright Tests](https://github.com/jakubkwintal/demobank/actions/workflows/playwright.yml/badge.svg) - latest GitHub Actions run status. Tests execute automatically on every push.
 
 
 ## 📫 Contact
